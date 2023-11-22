@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MobileDevelopment" parent="Theme.Material3.DayNight.NoActionBar">
+<!--        &lt;!&ndash; Customize your light theme here. &ndash;&gt;-->
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorPrimary">@color/background</item>
+
+    </style>
+
+    <style name="AppTheme.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_shape</item>
+    </style>
+
+    <style name="Theme.App.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/stroupe</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.MobileDevelopment</item>
+    </style>
+    <style name="Theme.MobileDevelopment" parent="Base.Theme.MobileDevelopment" />
+</resources>
