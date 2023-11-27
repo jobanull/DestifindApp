@@ -73,4 +73,5 @@
         <item>https://bogorreview.com/wp-content/uploads/2022/05/Curug-Cibaliung.jpg</item>,
     </string-array>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="email">Email</string>
 </resources>

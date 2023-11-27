@@ -6,9 +6,9 @@
         android:id="@+id/logout"
         android:title="Logout"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/map"
-        android:icon="@drawable/baseline_map_24"
-        app:showAsAction="ifRoom"
-        android:title="Maps" />
+<!--    <item-->
+<!--        android:id="@+id/map"-->
+<!--        android:icon="@drawable/baseline_map_24"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        android:title="Maps" />-->
 </menu>
