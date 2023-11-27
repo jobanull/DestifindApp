@@ -6,4 +6,6 @@
     <color name="colorCard">#0F1E24</color>
     <color name="buttonColor">#314E5E</color>
     <color name="navy">#2D3D4F</color>
+    <color name="text_color">#237CA2</color>
+    <color name="icon_color">#19B1F1</color>
 </resources>

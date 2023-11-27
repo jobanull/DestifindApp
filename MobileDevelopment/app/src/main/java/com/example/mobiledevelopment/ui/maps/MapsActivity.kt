@@ -1,6 +1,8 @@
 package com.example.mobiledevelopment.ui.maps
 
+import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
@@ -21,6 +23,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 
 
@@ -61,9 +64,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
 
-        getLocation()
         addManyMarker()
-
+        setMapStyle()
+        getMyLocation()
     }
 
     private val requestPermissionLauncher =
@@ -80,40 +83,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            mMap.isMyLocationEnabled = true
+//            mMap.isMyLocationEnabled = true
+
+            val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val lastKnownLocation =
+                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+
+            if (lastKnownLocation != null) {
+                val latitude = lastKnownLocation.latitude
+                val longitude = lastKnownLocation.longitude
+
+                val sydney = LatLng(latitude, longitude)
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(sydney).title("My Current Location")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12f))
+                mMap.addCircle(
+                    CircleOptions()
+                        .center(sydney)
+                        .radius(geofenceRadius)
+                        .fillColor(0x22FF0000)
+                        .strokeColor(Color.RED)
+                        .strokeWidth(3f)
+                )
+            }
         } else {
             requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
-    private fun getLocation() {
-        var locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
-        var locationListener = LocationListener { location ->
-            var latitute = location!!.latitude
-            var longitute = location!!.longitude
-            val sydney = LatLng(-6.839301, 107.629573)
-            mMap.addMarker(
-                MarkerOptions()
-                    .position(sydney).title("My Current Location")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12f))
-            mMap.addCircle(
-                CircleOptions()
-                    .center(sydney)
-                    .radius(geofenceRadius)
-                    .fillColor(0x22FF0000)
-                    .strokeColor(Color.RED)
-                    .strokeWidth(3f)
-            )
-        }
 
-        try {
-            locationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-        } catch (ex:SecurityException) {
-            Toast.makeText(applicationContext, "Fehler bei der Erfassung!", Toast.LENGTH_SHORT).show()
-        }
-
-    }
     data class TourismPlace(
         val name: String,
         val latitude: Double,
@@ -144,5 +145,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 300
             )
         )
+    }
+    private fun setMapStyle() {
+        try {
+            val success =
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.")
+            }
+        } catch (exception: Resources.NotFoundException) {
+            Log.e(TAG, "Can't find style. Error: ", exception)
+        }
+    }
+
+    companion object {
+        private const val TAG = "MapsActivity"
     }
 }
