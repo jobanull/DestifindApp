@@ -135,7 +135,7 @@ class LoginActivity : AppCompatActivity() {
             lifecycleScope.launch{
                 try {
                     showLoading(true)
-                    val apiService = ApiConfig.getApiService()
+                    val apiService = ApiConfig.getApiService("")
                     val successResponse = apiService.login(email, pass)
                     viewModel.saveSession(LoginResult(email, successResponse.loginResult?.token))
                     successResponse.message?.let { it1 -> showToast(it1) }

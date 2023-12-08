@@ -82,4 +82,7 @@ dependencies {
 
     // Glide
     implementation("com.github.bumptech.glide:glide:4.15.0")
+
+    // Paging
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
 }
