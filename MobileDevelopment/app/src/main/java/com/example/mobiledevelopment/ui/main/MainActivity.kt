@@ -3,16 +3,14 @@ package com.example.mobiledevelopment.ui.main
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
@@ -23,19 +21,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobiledevelopment.R
-import com.example.mobiledevelopment.data.Hero
-import com.example.mobiledevelopment.data.ListHeroAdapter
+import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.databinding.ActivityMainBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
+import com.example.mobiledevelopment.ui.adapter.ListDestinationAdapter
 import com.example.mobiledevelopment.ui.maps.MapsActivity
 import com.example.mobiledevelopment.ui.welcome.WelcomeActivity
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import java.io.IOException
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -45,43 +36,63 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var rvHeroes: RecyclerView
-    private val list = ArrayList<Hero>()
+    private var token: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Thread.sleep(3000)
         installSplashScreen()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         viewModel.getSession().observe(this) { user ->
+            token = user.token.toString()
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
+            }else {
+                user.token?.let { viewModel.findUsers(it) }
             }
         }
 
+        viewModel.isLoading.observe(this) {
+            showLoading(it)
+        }
 
-        binding.mapsImage.setOnClickListener{
-                val intent = Intent(this@MainActivity, MapsActivity::class.java)
-                startActivity(intent)
+        viewModel.listDst.observe(this){
+                consumer -> setUserList(consumer)
         }
 
         getMyLocation()
 
-
         setupView()
         setSupportActionBar(binding.toolbarMain)
 
-        rvHeroes = findViewById(R.id.rv_heroes)
+        binding.mapsImage.setOnClickListener {
+            val intent = Intent(this@MainActivity, MapsActivity::class.java)
+            startActivity(intent)
+        }
 
-        rvHeroes.setHasFixedSize(true)
 
-        list.addAll(listHeroes)
-        showRecyclerList()
+
+
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.option_menu, menu);
+        return true;
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.logout ->{
+                viewModel.logout()
+                return false
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
     private fun setupView() {
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -119,8 +130,6 @@ class MainActivity : AppCompatActivity() {
                 val latitude = lastKnownLocation.latitude
                 val longitude = lastKnownLocation.longitude
                 getAddressFromLocation(this, latitude, longitude)
-
-
             }
         } else {
             requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -161,51 +170,15 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    private val listHeroes: ArrayList<Hero>
-        get(){
-            val dataName = resources.getStringArray(R.array.data_name)
-            val dataDesc = resources.getStringArray(R.array.data_description)
-            val dataPhoto = resources.getStringArray(R.array.data_photo)
-            val listHero = ArrayList<Hero>()
-            for(i in dataName.indices){
-                val hero = Hero(dataName[i], dataDesc[i], dataPhoto[i])
-                listHero.add(hero)
-            }
-            return listHero
-        }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.option_menu, menu);
-        return true;
+    private fun setUserList(consumer: List<ListDestinationItem?>?){
+        val adapter = ListDestinationAdapter()
+        adapter.submitList(consumer)
+        binding.rvDst.adapter = adapter
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.logout ->{
-                viewModel.logout()
-                return false
-            }
-        }
-        return super.onOptionsItemSelected(item)
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
 
-    private fun showRecyclerList(){
-        rvHeroes.layoutManager = LinearLayoutManager(this)
-        val listHeroAdapter = ListHeroAdapter(list)
-        rvHeroes.adapter = listHeroAdapter
 
-        // data callback dapat dikonsumsi dari Activity dengan memanggil fungsi setOnItemClickCallback seperti berikut.
-        listHeroAdapter.setOnClickedCallback(object : ListHeroAdapter.OnItemClickCallback{
-            override fun onItemClicked(data: Hero) {
-                showSelectedHero(data)
-            }
-        })
-
-    }
-
-    // Mengambil data callback
-    private fun showSelectedHero(hero:Hero){
-        Toast.makeText(this, "Kamu Memilih  " +hero.name, Toast.LENGTH_SHORT).show()
-    }
 }

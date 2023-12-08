@@ -132,7 +132,7 @@ class RegisterActivity : AppCompatActivity() {
             lifecycleScope.launch{
                 try {
                     showLoading(true)
-                    val apiService = ApiConfig.getApiService()
+                    val apiService = ApiConfig.getApiService("")
                     val successResponse = apiService.register(name, email, pass)
                     successResponse.message?.let { it1 -> showToast(it1) }
                     showLoading(false)
