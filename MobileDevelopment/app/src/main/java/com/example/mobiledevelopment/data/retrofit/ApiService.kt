@@ -34,6 +34,14 @@ interface ApiService {
         @Field("password") password: String
     ): LoginResponse
 
+
+    @FormUrlEncoded
+    @POST("main")
+    suspend fun getDest(
+        @Field("lat") lat: Float,
+        @Field("lon") lon: Float
+    ): DestinationResponse
+
     @GET("stories")
     fun getStories(): Call<DestinationResponse>
 

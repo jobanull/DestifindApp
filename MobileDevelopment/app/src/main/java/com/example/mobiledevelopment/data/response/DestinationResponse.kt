@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 data class DestinationResponse(
 
-    @field:SerializedName("listStory")
+    @field:SerializedName("placesList")
     val listStory: List<ListDestinationItem> = emptyList(),
 
     @field:SerializedName("error")
@@ -31,13 +31,13 @@ data class DetailResponse(
 @Parcelize
 data class ListDestinationItem(
 
-    @field:SerializedName("photoUrl")
+    @field:SerializedName("imageUrl")
     val photoUrl: String = "",
 
     @field:SerializedName("createdAt")
     val createdAt: String = "",
 
-    @field:SerializedName("name")
+    @field:SerializedName("title")
     val name: String = "",
 
     @field:SerializedName("description")
