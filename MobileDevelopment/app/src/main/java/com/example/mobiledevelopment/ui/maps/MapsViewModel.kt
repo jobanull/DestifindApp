@@ -6,18 +6,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.mobiledevelopment.data.UserRepository
 import com.example.mobiledevelopment.data.response.DestinationResponse
+import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.data.response.LoginResult
 import com.example.mobiledevelopment.data.retrofit.ApiConfig
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MapsViewModel (private val repository: UserRepository) : ViewModel() {
 
-    private val _listUsers = MutableLiveData<DestinationResponse>()
-    val listUsers : LiveData<DestinationResponse> = _listUsers
+    private val _listDst = MutableLiveData<List<ListDestinationItem>>()
+    val listDst :LiveData<List<ListDestinationItem>> = _listDst
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+
+    var currentLatitude: Double = 0.0
+    var currentLongitude: Double = 0.0
 
     fun getSession(): LiveData<LoginResult> {
         return repository.getSession().asLiveData()
@@ -27,20 +37,32 @@ class MapsViewModel (private val repository: UserRepository) : ViewModel() {
         getSession()
     }
 
-    fun findUsers(token : String)  {
-        val client = ApiConfig.getApiService(token).getStoriesWithLocation()
-        client.enqueue(object : Callback<DestinationResponse> {
-            override fun onResponse(call: Call<DestinationResponse>, response: Response<DestinationResponse>) {
-                if(response.isSuccessful){
-                    _listUsers.value = response.body()
-                }else{
-                    Log.e(ContentValues.TAG, "onFailure: ${response.message()}")
-                }
-            }
+    fun getStories(token: String, latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
 
-            override fun onFailure(call: Call<DestinationResponse>, t: Throwable) {
-                Log.e(ContentValues.TAG, "onFailure : ${t.message.toString()}")
+                // Make the API call using the updated getStories function in UserRepository
+                val response = repository.getStories("Bearer $token", latitude, longitude)
+
+                if (response.isSuccessful) {
+                    // Handle a successful response
+                    _listDst.value = response.body()?.listStory
+                } else {
+                    // Handle an unsuccessful response
+                    // You might want to show an error message to the user
+                }
+            } catch (e: Exception) {
+                // Handle exceptions
+                // You might want to show an error message to the user
+            } finally {
+                _isLoading.value = false
             }
-        })
+        }
+    }
+
+    fun setCurrentLocation(latitude: Double, longitude: Double) {
+        currentLatitude = latitude
+        currentLongitude = longitude
     }
 }

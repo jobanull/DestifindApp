@@ -7,6 +7,7 @@ import com.example.mobiledevelopment.data.response.RegisterResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -34,14 +35,11 @@ interface ApiService {
         @Field("password") password: String
     ): LoginResponse
 
-    @GET("stories")
-    fun getStories(): Call<DestinationResponse>
-
-    @GET("stories/{id}")
-    fun getDetailStory(@Path("id") id: String): Call<DetailResponse>
-
-    @GET("stories")
-    fun getStoriesWithLocation(
-        @Query("location") location : Int = 1,
-    ): Call<DestinationResponse>
+    @FormUrlEncoded
+    @POST("main")
+    suspend fun getStories(
+        @Header("Authorization") auth: String,
+        @Field("lat") lat: Double = -6.201164960437535,
+        @Field("lon") lon: Double = 106.77238584716075
+    ): Response<DestinationResponse>
 }

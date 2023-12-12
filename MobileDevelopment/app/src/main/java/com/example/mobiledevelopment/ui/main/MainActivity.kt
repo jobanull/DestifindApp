@@ -8,6 +8,8 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,11 +51,12 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getSession().observe(this) { user ->
             token = user.token.toString()
+            Log.d(this.toString(), token)
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
             }else {
-                user.token?.let { viewModel.findUsers(it) }
+                user.token?.let { viewModel.getStories(it, viewModel.currentLatitude, viewModel.currentLongitude) }
             }
         }
 
@@ -67,6 +70,11 @@ class MainActivity : AppCompatActivity() {
 
         getMyLocation()
 
+        if (!isGpsEnabled()) {
+            promptEnableGps()
+        }
+
+
         setupView()
         setSupportActionBar(binding.toolbarMain)
 
@@ -79,6 +87,19 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+    private fun isGpsEnabled(): Boolean {
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    private fun promptEnableGps() {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        startActivity(intent)
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu);
         return true;
@@ -129,6 +150,10 @@ class MainActivity : AppCompatActivity() {
             if (lastKnownLocation != null) {
                 val latitude = lastKnownLocation.latitude
                 val longitude = lastKnownLocation.longitude
+
+                // Set the current location in the viewModel
+                viewModel.setCurrentLocation(latitude, longitude)
+
                 getAddressFromLocation(this, latitude, longitude)
             }
         } else {
@@ -178,7 +203,4 @@ class MainActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
-
-
-
 }

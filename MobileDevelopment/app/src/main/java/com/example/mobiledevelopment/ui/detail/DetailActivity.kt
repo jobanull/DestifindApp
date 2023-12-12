@@ -2,9 +2,11 @@ package com.example.mobiledevelopment.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.example.mobiledevelopment.R
+import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.databinding.ActivityDetailBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 
@@ -19,17 +21,27 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val intent = this.intent.getStringExtra(KEY)
+        val detailStory = intent.getParcelableExtra<ListDestinationItem>(KEY) as ListDestinationItem
 
-        detailViewModel.user.observe(this){
-            it?.let { binding.title.text = it.story?.name }
-            it?.let { binding.description.text = it.story?.description }
-            Glide.with(baseContext).load(it.story?.photoUrl).into(binding.image)
-        }
+        setupUi(detailStory)
+    }
 
-        detailViewModel.getSession().observe(this) { user ->
-            user.token?.let { detailViewModel.findDetail(it, intent.toString()) }
+    private fun setupUi(data : ListDestinationItem){
+        showLoading(true)
+        Glide.with(this@DetailActivity)
+            .load(data.photoUrl)
+            .fitCenter()
+            .into(binding.image)
+
+        data.apply {
+            binding.title.text = name
+            binding.description.text = description
         }
+        showLoading(false)
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
 

@@ -47,9 +47,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mapsViewModel.getSession().observe(this){user->
-            user.token?.let { mapsViewModel.findUsers(it) }
-        }
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -69,6 +67,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setMapStyle()
         getMyLocation()
         addManyMarker()
+
+        mapsViewModel.getSession().observe(this){user->
+            user.token?.let { mapsViewModel.getStories(it, mapsViewModel.currentLatitude, mapsViewModel.currentLongitude ) }
+        }
     }
 
     private val requestPermissionLauncher =
@@ -95,6 +97,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (lastKnownLocation != null) {
                 val latitude = lastKnownLocation.latitude
                 val longitude = lastKnownLocation.longitude
+                mapsViewModel.setCurrentLocation(latitude,longitude)
+
+                Log.d("LAT", "Lat : ${latitude}, Lon : ${longitude}")
 
                 val sydney = LatLng(latitude, longitude)
                 mMap.addMarker(
@@ -131,8 +136,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun addManyMarker() {
-        mapsViewModel.listUsers.observe(this) {data ->
-            data.listStory.forEach { data ->
+        mapsViewModel.listDst.observe(this) {data ->
+            data.forEach { data ->
+
                 val latLng = LatLng(data.lat, data.lon)
                 mMap.addMarker(
                     MarkerOptions()
