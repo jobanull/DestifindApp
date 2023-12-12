@@ -22,7 +22,7 @@ object ApiConfig {
             .addInterceptor(authInterceptor)
             .build()
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://story-api.dicoding.dev/v1/")
+            .baseUrl("https://destifind-app.et.r.appspot.com")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

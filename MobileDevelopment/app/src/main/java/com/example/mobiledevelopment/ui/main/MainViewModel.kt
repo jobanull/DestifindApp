@@ -27,6 +27,10 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+
+    var currentLatitude: Double = 0.0
+    var currentLongitude: Double = 0.0
+
     fun getSession(): LiveData<LoginResult> {
         return repository.getSession().asLiveData()
     }
@@ -41,24 +45,32 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         getSession()
     }
 
-    @SuppressLint("SuspiciousIndentation")
-    fun findUsers(token : String)  {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService(token).getStories()
-        client.enqueue(object : Callback<DestinationResponse> {
-            override fun onResponse(call: Call<DestinationResponse>, response: Response<DestinationResponse>) {
-                _isLoading.value = false
-                if(response.isSuccessful){
-                    _listDst.value = response.body()?.listStory
-                }else{
-                    Log.e(ContentValues.TAG, "onFailure: ${response.message()}")
-                }
-            }
+    fun getStories(token: String, latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
 
-            override fun onFailure(call: Call<DestinationResponse>, t: Throwable) {
+                // Make the API call using the updated getStories function in UserRepository
+                val response = repository.getStories("Bearer $token", latitude, longitude)
+
+                if (response.isSuccessful) {
+                    // Handle a successful response
+                    _listDst.value = response.body()?.listStory
+                } else {
+                    // Handle an unsuccessful response
+                    // You might want to show an error message to the user
+                }
+            } catch (e: Exception) {
+                // Handle exceptions
+                // You might want to show an error message to the user
+            } finally {
                 _isLoading.value = false
-                Log.e(ContentValues.TAG, "onFailure : ${t.message.toString()}")
             }
-        })
+        }
+    }
+
+    fun setCurrentLocation(latitude: Double, longitude: Double) {
+        currentLatitude = latitude
+        currentLongitude = longitude
     }
 }
