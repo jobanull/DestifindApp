@@ -30,14 +30,14 @@ data class ListDestinationItem(
     @field:SerializedName("description")
     val description: String? = "",
 
-//    @field:SerializedName("rating")
-//    val rating: Double? = 0.0,
-//
-//    @field:SerializedName("distance")
-//    val distance: Int? = 1,
-//
-//    @field:SerializedName("estimatedTime")
-//    val estimatedTime: Int? = 1,
+    @field:SerializedName("rating")
+    val rating: String? = "",
+
+    @field:SerializedName("distances")
+    val distance: Double? = 0.0,
+
+    @field:SerializedName("estimatedTime")
+    val estimatedTime: Int? = 0,
 
     @field:SerializedName("latitude")
     val lat: Double = 0.0,

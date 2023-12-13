@@ -36,9 +36,16 @@ class DetailActivity : AppCompatActivity() {
         data.apply {
             binding.title.text = name
             binding.description.text = description
-//            binding.hour.text = hour.toString()
-//            binding.distance.text = distance.toString()
-//            binding.rating.text = rating.toString()
+
+            binding.hour.apply {
+                binding.hour.text = context.getString(R.string.hour, estimatedTime.toString())
+            }
+            binding.distance.apply {
+                binding.distance.text = context.getString(R.string.distance,distance.toString())
+            }
+            binding.rating.apply {
+                binding.rating.text = context.getString(R.string.rating, rating.toString())
+            }
         }
         showLoading(false)
     }

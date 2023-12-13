@@ -30,16 +30,15 @@ class ListDestinationAdapter : ListAdapter<ListDestinationItem, ListDestinationA
         fun bind(review: ListDestinationItem){
             title.text = review.name
             desc.text = review.description
-//            rating.text = review.rating.toString()
-//            hour.apply {
-//                hour.text = context.getString(R.string.hour, review.hour.toString())
-//            }
-//            distance.apply {
-//                distance.text = context.getString(R.string.distance, review.distance.toString())
-//            }
-//            rating.apply {
-//                distance.text = context.getString(R.string.rating, review.rating.toString())
-//            }
+            hour.apply {
+                hour.text = context.getString(R.string.hour, review.estimatedTime.toString())
+            }
+            distance.apply {
+                distance.text = context.getString(R.string.distance, review.distance.toString())
+            }
+            rating.apply {
+                rating.text = context.getString(R.string.rating, review.rating.toString())
+            }
             Glide.with(itemView.context)
                 .load(review.photoUrl)
                 .into(image)

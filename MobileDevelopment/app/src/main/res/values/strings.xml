@@ -28,4 +28,6 @@
     <string name="hour">%1$s Hour </string>
     <string name="distance">%1$s Km</string>
     <string name="hello_world">Hello World</string>
+    <string name="retry_description">Data not found, please retry</string>
+    <string name="retry">Retry</string>
 </resources>

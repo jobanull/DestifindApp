@@ -18,6 +18,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +30,8 @@ import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.adapter.ListDestinationAdapter
 import com.example.mobiledevelopment.ui.maps.MapsActivity
 import com.example.mobiledevelopment.ui.welcome.WelcomeActivity
+import com.example.mobiledevelopment.util.RetryDialog
+import com.example.mobiledevelopment.util.RetryListener
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -57,17 +60,16 @@ class MainActivity : AppCompatActivity() {
                 user.token?.let { viewModel.getStories(it, viewModel.currentLatitude, viewModel.currentLongitude) }
             }
         }
+        viewModel.listDst.observe(this){
+                consumer -> setUserList(consumer)
+        }
 
         viewModel.isLoading.observe(this) {
             showLoading(it)
         }
 
-        viewModel.listDst.observe(this){
-                consumer -> setUserList(consumer)
-        }
 
         getMyLocation()
-
         if (!isGpsEnabled()) {
             promptEnableGps()
         }
@@ -80,10 +82,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, MapsActivity::class.java)
             startActivity(intent)
         }
-
-
-
-
     }
 
 
@@ -147,16 +145,42 @@ class MainActivity : AppCompatActivity() {
 
             if (lastKnownLocation != null) {
                 val latitude = lastKnownLocation.latitude
-                val longitude = lastKnownLocation.longitude
+                val longitude =  lastKnownLocation.longitude
 
-                // Set the current location in the viewModel
-                viewModel.setCurrentLocation(latitude, longitude)
 
-                getAddressFromLocation(this, latitude, longitude)
+                if (latitude == 0.0 && longitude == 0.0) {
+                    // Show retry dialog
+                    showRetryDialog()
+                } else {
+                    // Set the current location in the viewModel
+                    viewModel.setCurrentLocation(latitude, longitude)
+                    getAddressFromLocation(this, latitude, longitude)
+                }
+
+
+
             }
         } else {
             requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
+    }
+
+
+    private fun showRetryDialog() {
+        // Implement your retry dialog logic here
+        // You can show an AlertDialog, Snackbar, or any other UI element to prompt the user to retry
+        AlertDialog.Builder(this)
+            .setTitle("Retry")
+            .setMessage("Unable to get location. Do you want to retry?")
+            .setPositiveButton("Retry") { _, _ ->
+                // Retry logic, you can call getMyLocation() again or handle as needed
+                getMyLocation()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                // Handle cancellation if needed
+            }
+            .show()
     }
 
 
