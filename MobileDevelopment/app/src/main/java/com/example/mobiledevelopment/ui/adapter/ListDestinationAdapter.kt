@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.mobiledevelopment.R
 import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.databinding.DestinationItemBinding
 import com.example.mobiledevelopment.ui.detail.DetailActivity
@@ -21,10 +22,24 @@ class ListDestinationAdapter : ListAdapter<ListDestinationItem, ListDestinationA
     class MyViewHolder(binding: DestinationItemBinding) : RecyclerView.ViewHolder(binding.root){
         private val title = binding.title
         private val image = binding.images
-        private val desc =binding.description
+        private val desc = binding.description
+        private val hour = binding.hour
+        private val distance = binding.distance
+        private val rating = binding.rating
+
         fun bind(review: ListDestinationItem){
             title.text = review.name
             desc.text = review.description
+//            rating.text = review.rating.toString()
+//            hour.apply {
+//                hour.text = context.getString(R.string.hour, review.hour.toString())
+//            }
+//            distance.apply {
+//                distance.text = context.getString(R.string.distance, review.distance.toString())
+//            }
+//            rating.apply {
+//                distance.text = context.getString(R.string.rating, review.rating.toString())
+//            }
             Glide.with(itemView.context)
                 .load(review.photoUrl)
                 .into(image)

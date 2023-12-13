@@ -20,7 +20,6 @@ class UserRepository private constructor(
         userPreference.saveSession(user)
     }
     suspend fun getStories(auth: String, lat: Double, lon: Double): Response<DestinationResponse> {
-        // Assume ApiService has a function named getStories with the required parameters
         return apiService.getStories(auth, lat, lon)
     }
     fun getSession(): Flow<LoginResult> {

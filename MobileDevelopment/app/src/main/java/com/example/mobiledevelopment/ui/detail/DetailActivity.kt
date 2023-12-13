@@ -12,9 +12,7 @@ import com.example.mobiledevelopment.ui.ViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
 
-    private val detailViewModel by viewModels<DetailViewModel> {
-        ViewModelFactory.getInstance(this)
-    }
+
     private lateinit var binding : ActivityDetailBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +20,9 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val detailStory = intent.getParcelableExtra<ListDestinationItem>(KEY) as ListDestinationItem
-
+        binding.backButton.setOnClickListener{
+            onBackPressedDispatcher.onBackPressed()
+        }
         setupUi(detailStory)
     }
 
@@ -36,6 +36,9 @@ class DetailActivity : AppCompatActivity() {
         data.apply {
             binding.title.text = name
             binding.description.text = description
+//            binding.hour.text = hour.toString()
+//            binding.distance.text = distance.toString()
+//            binding.rating.text = rating.toString()
         }
         showLoading(false)
     }

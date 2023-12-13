@@ -1,7 +1,6 @@
 package com.example.mobiledevelopment.data.retrofit
 
 import com.example.mobiledevelopment.data.response.DestinationResponse
-import com.example.mobiledevelopment.data.response.DetailResponse
 import com.example.mobiledevelopment.data.response.LoginResponse
 import com.example.mobiledevelopment.data.response.RegisterResponse
 import okhttp3.MultipartBody
