@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mobiledevelopment.data.UserRepository
 import com.example.mobiledevelopment.di.Injection
+import com.example.mobiledevelopment.ui.category.CategoryViewModel
 import com.example.mobiledevelopment.ui.detail.DetailViewModel
 import com.example.mobiledevelopment.ui.login.LoginViewModel
 import com.example.mobiledevelopment.ui.main.MainViewModel
@@ -27,6 +28,9 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
             }
             modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
                 MapsViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(CategoryViewModel::class.java) -> {
+                CategoryViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

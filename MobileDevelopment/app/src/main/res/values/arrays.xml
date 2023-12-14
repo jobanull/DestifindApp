@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category_array">
+        <item>Bahari</item>
+        <item>Budaya</item>
+        <item>Taman Hiburan</item>
+        <item>Cagar Alam</item>
+        <item>Pusat Perbelanjaan</item>
+        <item>Tempat Ibadah</item>
+    </string-array>
+</resources>

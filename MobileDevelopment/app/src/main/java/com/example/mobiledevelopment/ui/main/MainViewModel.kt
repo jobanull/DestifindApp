@@ -1,23 +1,14 @@
 package com.example.mobiledevelopment.ui.main
 
-import android.annotation.SuppressLint
-import android.content.ContentValues
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobiledevelopment.data.UserRepository
-import com.example.mobiledevelopment.data.pref.UserModel
-import com.example.mobiledevelopment.data.response.DestinationResponse
 import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.data.response.LoginResult
-import com.example.mobiledevelopment.data.retrofit.ApiConfig
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
 

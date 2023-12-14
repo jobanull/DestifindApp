@@ -7,8 +7,11 @@ import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -48,7 +51,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
 
-
+        setupView()
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -71,6 +74,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapsViewModel.getSession().observe(this){user->
             user.token?.let { mapsViewModel.getStories(it, mapsViewModel.currentLatitude, mapsViewModel.currentLongitude ) }
         }
+    }
+
+    private fun setupView(){
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
+        supportActionBar?.hide()
     }
 
     private val requestPermissionLauncher =

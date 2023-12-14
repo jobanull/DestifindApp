@@ -1,7 +1,5 @@
 package com.example.mobiledevelopment.data
 
-import androidx.lifecycle.LiveData
-import com.example.mobiledevelopment.data.pref.UserModel
 import com.example.mobiledevelopment.data.pref.UserPreference
 import com.example.mobiledevelopment.data.response.DestinationResponse
 import com.example.mobiledevelopment.data.response.LoginResult
@@ -20,7 +18,8 @@ class UserRepository private constructor(
         userPreference.saveSession(user)
     }
     suspend fun getStories(auth: String, lat: Double, lon: Double): Response<DestinationResponse> {
-        return apiService.getStories(auth, lat, lon)
+//        return apiService.getStories(auth, lat, lon)
+        return apiService.getStories(auth, -6.208560190493255, 106.77456829617012)
     }
     fun getSession(): Flow<LoginResult> {
         return userPreference.getSession()

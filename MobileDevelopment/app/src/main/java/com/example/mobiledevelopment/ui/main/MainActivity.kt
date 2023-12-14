@@ -28,6 +28,7 @@ import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.databinding.ActivityMainBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.adapter.ListDestinationAdapter
+import com.example.mobiledevelopment.ui.category.CategoryActivity
 import com.example.mobiledevelopment.ui.maps.MapsActivity
 import com.example.mobiledevelopment.ui.welcome.WelcomeActivity
 import com.example.mobiledevelopment.util.RetryDialog
@@ -41,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityMainBinding
-    private var isIconExpanded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
             }else {
-                user.token?.let { viewModel.getStories(it, viewModel.currentLatitude, viewModel.currentLongitude) }
+                if (user.category.isNullOrEmpty()) {
+                    startActivity(Intent(this, CategoryActivity::class.java))
+                    finish()
+                } else {
+                    user.token?.let { viewModel.getStories(it, viewModel.currentLatitude, viewModel.currentLongitude) }
+                }
             }
         }
         viewModel.listDst.observe(this){

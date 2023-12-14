@@ -1,8 +1,11 @@
 package com.example.mobiledevelopment.ui.detail
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.example.mobiledevelopment.R
@@ -24,6 +27,7 @@ class DetailActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
         setupUi(detailStory)
+        setupView()
     }
 
     private fun setupUi(data : ListDestinationItem){
@@ -48,6 +52,19 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         showLoading(false)
+    }
+
+    private fun setupView(){
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
+        supportActionBar?.hide()
     }
 
     private fun showLoading(isLoading: Boolean) {

@@ -23,5 +23,7 @@ data class LoginResult(
     @field:SerializedName("token")
     val token: String? = null,
 
+    val category: String = "",
+
     val isLogin: Boolean = false
 )
