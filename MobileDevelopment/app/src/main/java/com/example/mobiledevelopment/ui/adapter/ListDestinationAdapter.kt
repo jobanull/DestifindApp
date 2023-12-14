@@ -16,9 +16,6 @@ import com.example.mobiledevelopment.databinding.DestinationItemBinding
 import com.example.mobiledevelopment.ui.detail.DetailActivity
 
 class ListDestinationAdapter : ListAdapter<ListDestinationItem, ListDestinationAdapter.MyViewHolder>(DIFF_CALLBACK) {
-
-
-
     class MyViewHolder(binding: DestinationItemBinding) : RecyclerView.ViewHolder(binding.root){
         private val title = binding.title
         private val image = binding.images
@@ -72,7 +69,7 @@ class ListDestinationAdapter : ListAdapter<ListDestinationItem, ListDestinationA
     }
 
     companion object {
-        const val KEY = "key_story"
+        const val KEY = "key_dst"
         val DIFF_CALLBACK = object: DiffUtil.ItemCallback<ListDestinationItem>(){
             override fun areItemsTheSame(oldItem: ListDestinationItem, newItem: ListDestinationItem): Boolean {
                 return oldItem == newItem

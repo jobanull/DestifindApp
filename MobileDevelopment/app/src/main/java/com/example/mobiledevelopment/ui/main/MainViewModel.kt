@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobiledevelopment.data.UserRepository
+import com.example.mobiledevelopment.data.pref.LoginResult
 import com.example.mobiledevelopment.data.response.ListDestinationItem
-import com.example.mobiledevelopment.data.response.LoginResult
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
@@ -40,20 +40,14 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-
-                // Make the API call using the updated getStories function in UserRepository
                 val response = repository.getStories("Bearer $token", latitude, longitude)
 
                 if (response.isSuccessful) {
-                    // Handle a successful response
-                    _listDst.value = response.body()?.listStory
+                    _listDst.value = response.body()?.listDst
                 } else {
-                    // Handle an unsuccessful response
-                    // You might want to show an error message to the user
                 }
             } catch (e: Exception) {
-                // Handle exceptions
-                // You might want to show an error message to the user
+
             } finally {
                 _isLoading.value = false
             }

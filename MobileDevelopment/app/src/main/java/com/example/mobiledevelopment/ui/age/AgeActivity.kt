@@ -2,12 +2,9 @@ package com.example.mobiledevelopment.ui.age
 
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -15,10 +12,11 @@ import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.mobiledevelopment.R
-import com.example.mobiledevelopment.data.response.LoginResult
+import com.example.mobiledevelopment.data.pref.LoginResult
 import com.example.mobiledevelopment.databinding.ActivityAgeBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.main.MainActivity
+import com.example.mobiledevelopment.util.setupView
 import kotlinx.coroutines.launch
 
 class AgeActivity : AppCompatActivity() {
@@ -28,11 +26,6 @@ class AgeActivity : AppCompatActivity() {
     private val ageViewModel by viewModels<AgeViewModel> {
         ViewModelFactory.getInstance(this)
     }
-
-    private var name : String? = ""
-    private var token : String? = ""
-    private var category : String = ""
-    private var selectedAge : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +38,7 @@ class AgeActivity : AppCompatActivity() {
 
         ageViewModel.getSession().observe(this){
             user ->
-            name = user.name
+            email = user.email
             token = user.token
             category = user.category
         }
@@ -63,16 +56,14 @@ class AgeActivity : AppCompatActivity() {
                 id: Long
             ) {
                 selectedAge = ages[position]
-
             }
-
             override fun onNothingSelected(parentView: AdapterView<*>) {
             }
         }
 
         button.setOnClickListener {
             lifecycleScope.launch {
-                ageViewModel.saveSession(LoginResult(name, token, category, selectedAge))
+                ageViewModel.saveSession(LoginResult(email, token, category, selectedAge))
             }
             val intent = Intent(this@AgeActivity, MainActivity::class.java)
             startActivity(intent)
@@ -83,26 +74,18 @@ class AgeActivity : AppCompatActivity() {
         playAnimation()
     }
 
-
-
-    private fun setupView(){
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
-    }
-
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.image, View.TRANSLATION_X, -30f, 30f).apply {
             duration = 6000
             repeatCount = ObjectAnimator.INFINITE
             repeatMode = ObjectAnimator.REVERSE
         }.start()
+    }
+
+    companion object{
+        private var email : String? = ""
+        private var token : String? = ""
+        private var category : String = ""
+        private var selectedAge : String = ""
     }
 }

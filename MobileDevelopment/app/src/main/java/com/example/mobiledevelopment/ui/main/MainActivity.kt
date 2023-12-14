@@ -5,24 +5,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.LocationManager
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.mobiledevelopment.R
 import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.databinding.ActivityMainBinding
@@ -32,8 +25,8 @@ import com.example.mobiledevelopment.ui.age.AgeActivity
 import com.example.mobiledevelopment.ui.category.CategoryActivity
 import com.example.mobiledevelopment.ui.maps.MapsActivity
 import com.example.mobiledevelopment.ui.welcome.WelcomeActivity
-import com.example.mobiledevelopment.util.RetryDialog
-import com.example.mobiledevelopment.util.RetryListener
+import com.example.mobiledevelopment.util.setupView
+import com.example.mobiledevelopment.util.showToast
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -129,18 +122,7 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-    private fun setupView() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
-    }
+
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -186,18 +168,14 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun showRetryDialog() {
-        // Implement your retry dialog logic here
-        // You can show an AlertDialog, Snackbar, or any other UI element to prompt the user to retry
         AlertDialog.Builder(this)
             .setTitle("Retry")
             .setMessage("Unable to get location. Do you want to retry?")
             .setPositiveButton("Retry") { _, _ ->
-                // Retry logic, you can call getMyLocation() again or handle as needed
                 getMyLocation()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
-                // Handle cancellation if needed
             }
             .show()
     }
@@ -223,18 +201,15 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    showToast("Alamat tidak ditemukan")
+                    showToast(context,"Alamat tidak ditemukan")
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            showToast("Gagal mendapatkan alamat")
+            showToast(context,"Gagal mendapatkan alamat")
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 
     private fun setUserList(consumer: List<ListDestinationItem?>?){
         val adapter = ListDestinationAdapter()

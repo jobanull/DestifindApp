@@ -1,30 +1,23 @@
 package com.example.mobiledevelopment.ui.category
 
-import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.example.mobiledevelopment.R
-import com.example.mobiledevelopment.data.pref.UserPreference
-import com.example.mobiledevelopment.data.pref.dataStore
-import com.example.mobiledevelopment.data.response.LoginResult
+import com.example.mobiledevelopment.data.pref.LoginResult
 import com.example.mobiledevelopment.databinding.ActivityCategoryBinding
-import com.example.mobiledevelopment.databinding.ActivityMainBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.main.MainActivity
-import com.example.mobiledevelopment.ui.main.MainViewModel
+import com.example.mobiledevelopment.util.setupView
+import com.example.mobiledevelopment.util.showToast
 import kotlinx.coroutines.launch
 
 class CategoryActivity : AppCompatActivity() {
@@ -35,9 +28,6 @@ class CategoryActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
 
-    private var name : String? = ""
-    private var token : String? = ""
-    private var selectedCategory : String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCategoryBinding.inflate(layoutInflater)
@@ -49,7 +39,7 @@ class CategoryActivity : AppCompatActivity() {
 
         categoryViewModel.getSession().observe(this){
                 user ->
-             name = user.name
+             email = user.email
              token = user.token
 
 
@@ -79,39 +69,41 @@ class CategoryActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             lifecycleScope.launch {
-                categoryViewModel.saveSession(LoginResult(name, token,selectedCategory))
+                try {
+                    showLoading(true)
+                    categoryViewModel.saveSession(LoginResult(email, token,selectedCategory))
+                    showLoading(false)
+
+                    val intent = Intent(this@CategoryActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }catch (e : Exception){
+                    showToast(this@CategoryActivity, "Unexpected error : ${e.message}")
+                }
             }
-            val intent = Intent(this@CategoryActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+
         }
 
 
         setupView()
         playAnimation()
     }
-
-
-
-    private fun setupView(){
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
-    }
-
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.image, View.TRANSLATION_X, -30f, 30f).apply {
             duration = 6000
             repeatCount = ObjectAnimator.INFINITE
             repeatMode = ObjectAnimator.REVERSE
         }.start()
+    }
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+
+    companion object{
+        private var email : String? = ""
+        private var token : String? = ""
+        private var selectedCategory : String = ""
     }
 }
 

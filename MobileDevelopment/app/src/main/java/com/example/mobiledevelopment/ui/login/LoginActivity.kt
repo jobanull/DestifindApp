@@ -2,20 +2,15 @@ package com.example.mobiledevelopment.ui.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.mobiledevelopment.data.pref.LoginResult
 import com.example.mobiledevelopment.data.response.LoginResponse
-import com.example.mobiledevelopment.data.response.LoginResult
 import com.example.mobiledevelopment.data.retrofit.ApiConfig
 import com.example.mobiledevelopment.databinding.ActivityLoginBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
@@ -23,6 +18,9 @@ import com.example.mobiledevelopment.ui.custom.CustomButton
 import com.example.mobiledevelopment.ui.custom.CustomEmailText
 import com.example.mobiledevelopment.ui.custom.CustomPasswordText
 import com.example.mobiledevelopment.ui.main.MainActivity
+import com.example.mobiledevelopment.util.setupTextWatcher
+import com.example.mobiledevelopment.util.setupView
+import com.example.mobiledevelopment.util.showToast
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -53,21 +51,9 @@ class LoginActivity : AppCompatActivity() {
 
         validateEmail()
         validatePassword()
-        setupAction()
+        setupAction(this)
     }
 
-    private fun setupView(){
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
-    }
 
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
@@ -95,38 +81,19 @@ class LoginActivity : AppCompatActivity() {
         val result = loginEmailText.text
         loginButton.isEnabled = result != null && result.toString().isNotEmpty()
     }
-
-    private fun validateEmail(){
-        loginEmailText.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                setMyButtonEnable()
-            }
-        })
+    private fun validateEmail() {
+        loginEmailText.setupTextWatcher {
+            setMyButtonEnable()
+        }
     }
 
-    private fun validatePassword(){
-        loginPassText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
-
-            override fun afterTextChanged(s: Editable) {
-            }
-        })
+    private fun validatePassword() {
+        loginPassText.setupTextWatcher {
+            setMyButtonEnable()
+        }
     }
 
-    private fun setupAction() {
+    private fun setupAction(context : Context) {
         binding.btnLogin.setOnClickListener{
             val email = loginEmailText.text.toString()
             val pass = loginPassText.text.toString()
@@ -138,7 +105,7 @@ class LoginActivity : AppCompatActivity() {
                     val apiService = ApiConfig.getApiService("")
                     val successResponse = apiService.login(email, pass)
                     viewModel.saveSession(LoginResult(email, successResponse.token))
-                    successResponse.message?.let { it1 -> showToast(it1) }
+                    successResponse.message?.let { it1 -> showToast(context, it1) }
                     showLoading(false)
 
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
@@ -149,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
                     showLoading(true)
                     val errorBody = e.response()?.errorBody()?.string()
                     val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
-                    errorResponse.message?.let { it1 -> showToast(it1) }
+                    errorResponse.message?.let { it1 -> showToast(context, it1) }
                     showLoading(false)
                 }
             }
@@ -160,7 +127,4 @@ class LoginActivity : AppCompatActivity() {
         binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 }

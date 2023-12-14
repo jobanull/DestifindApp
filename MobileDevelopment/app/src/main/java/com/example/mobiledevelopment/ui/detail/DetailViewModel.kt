@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.example.mobiledevelopment.data.UserRepository
-import com.example.mobiledevelopment.data.response.LoginResult
+import com.example.mobiledevelopment.data.pref.LoginResult
 
 class DetailViewModel(private val repository: UserRepository) : ViewModel() {
 
