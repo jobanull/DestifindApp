@@ -100,9 +100,9 @@ class RegisterActivity : AppCompatActivity() {
                     val apiService = ApiConfig.getApiService("")
                     val successResponse = apiService.register(name, email, pass)
                     showToast(context, successResponse.message)
-                    showLoading(false)
                     val intent = Intent(this@RegisterActivity, WelcomeActivity::class.java)
                     startActivity(intent)
+                    showLoading(false)
                 }catch (e: HttpException){
                     showLoading(true)
                     val errorBody = e.response()?.errorBody()?.string()

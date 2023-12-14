@@ -63,7 +63,7 @@ class AgeActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             lifecycleScope.launch {
-                ageViewModel.saveSession(LoginResult(email, token, category, selectedAge))
+                ageViewModel.saveSession(LoginResult(email, token, selectedAge.toInt(),category))
             }
             val intent = Intent(this@AgeActivity, MainActivity::class.java)
             startActivity(intent)

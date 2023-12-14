@@ -1,30 +1,22 @@
 package com.example.mobiledevelopment.util
 
+import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import android.view.Window
-import android.widget.Button
-import android.widget.TextView
-import com.example.mobiledevelopment.R
+import androidx.fragment.app.DialogFragment
 
-class RetryDialog(context: Context, private val retryListener: RetryListener) : Dialog(context) {
+class RetryDialog : DialogFragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.retry_layout)
-
-        val errorMessageTextView: TextView = findViewById(R.id.textViewErrorMessage)
-        val retryButton: Button = findViewById(R.id.buttonRetry)
-
-        retryButton.setOnClickListener {
-            dismiss()
-            retryListener.onRetry()
-        }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return AlertDialog.Builder(requireContext())
+            .setTitle("Retry")
+            .setMessage("Location is not valid. Retry?")
+            .setPositiveButton("Retry") { _, _ ->
+                // Handle retry action here
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                // Handle cancel action here or dismiss the dialog
+            }
+            .create()
     }
-}
-
-interface RetryListener {
-    fun onRetry()
 }

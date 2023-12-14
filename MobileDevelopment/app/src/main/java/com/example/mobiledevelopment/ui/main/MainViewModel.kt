@@ -1,5 +1,6 @@
 package com.example.mobiledevelopment.ui.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,9 +19,12 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _currentLatitude = MutableLiveData<Double>()
+    val currentLatitude : LiveData<Double> = _currentLatitude
 
-    var currentLatitude: Double = 0.0
-    var currentLongitude: Double = 0.0
+    private val _currentLongitude = MutableLiveData<Double>()
+    val currentLongitude : LiveData<Double> = _currentLongitude
+
 
     fun getSession(): LiveData<LoginResult> {
         return repository.getSession().asLiveData()
@@ -36,11 +40,11 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         getSession()
     }
 
-    fun getStories(token: String, latitude: Double, longitude: Double) {
+    fun getStories(token: String, latitude: Double, longitude: Double,  age: Int,category: String,) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                val response = repository.getStories("Bearer $token", latitude, longitude)
+                val response = repository.getStories("Bearer $token", latitude, longitude, age,category)
 
                 if (response.isSuccessful) {
                     _listDst.value = response.body()?.listDst
@@ -55,7 +59,7 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     }
 
     fun setCurrentLocation(latitude: Double, longitude: Double) {
-        currentLatitude = latitude
-        currentLongitude = longitude
+        _currentLatitude.value = latitude
+        _currentLongitude.value = longitude
     }
 }

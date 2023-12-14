@@ -35,17 +35,26 @@ class CategoryActivity : AppCompatActivity() {
 
         val spinner: Spinner = binding.spinnerCategories
         val categories = resources.getStringArray(R.array.category_array)
+        val categoryLabels = mapOf(
+            "point_of_interest" to "Point of Interest",
+            "amusement_park" to "Amusement Park",
+            "tourist_attraction" to "Tourist Attraction",
+            "restaurant" to "Restaurant",
+            "art_gallery" to "Art Gallery"
+        )
         val button: Button = binding.buttonCategory
 
-        categoryViewModel.getSession().observe(this){
-                user ->
+        categoryViewModel.getSession().observe(this){ user ->
              email = user.email
              token = user.token
-
-
+             age = user.age
         }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            categories.map { categoryLabels[it] ?: it }
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         spinner.adapter = adapter
@@ -71,7 +80,7 @@ class CategoryActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     showLoading(true)
-                    categoryViewModel.saveSession(LoginResult(email, token,selectedCategory))
+                    categoryViewModel.saveSession(LoginResult(email, token,age,selectedCategory))
                     showLoading(false)
 
                     val intent = Intent(this@CategoryActivity, MainActivity::class.java)
@@ -103,6 +112,7 @@ class CategoryActivity : AppCompatActivity() {
     companion object{
         private var email : String? = ""
         private var token : String? = ""
+        private var age : Int = 0
         private var selectedCategory : String = ""
     }
 }

@@ -10,9 +10,10 @@ data class LoginResult(
     @field:SerializedName("token")
     val token: String? = null,
 
+    val age: Int = 1
+    ,
     val category: String = "",
 
-    val age: String = "",
 
     val isLogin: Boolean = false
 )

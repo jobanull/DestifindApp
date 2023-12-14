@@ -30,11 +30,11 @@ class MapsViewModel (private val repository: UserRepository) : ViewModel() {
         getSession()
     }
 
-    fun getStories(token: String, latitude: Double, longitude: Double) {
+    fun getStories(token: String, latitude: Double, longitude: Double, age: Int, category : String) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                val response = repository.getStories("Bearer $token", latitude, longitude)
+                val response = repository.getStories("Bearer $token", latitude, longitude, age, category)
 
                 if (response.isSuccessful) {
                     _listDst.value = response.body()?.listDst

@@ -67,7 +67,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         addManyMarker()
 
         mapsViewModel.getSession().observe(this){user->
-            user.token?.let { mapsViewModel.getStories(it, mapsViewModel.currentLatitude, mapsViewModel.currentLongitude ) }
+            user.token?.let { mapsViewModel.getStories(it, mapsViewModel.currentLatitude, mapsViewModel.currentLongitude, user.age, user.category ) }
         }
     }
 
@@ -98,8 +98,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val latitude = lastKnownLocation.latitude
                 val longitude = lastKnownLocation.longitude
                 mapsViewModel.setCurrentLocation(latitude,longitude)
-
-                Log.d("LAT", "Lat : ${latitude}, Lon : ${longitude}")
 
                 val sydney = LatLng(latitude, longitude)
                 mMap.addMarker(

@@ -31,6 +31,8 @@ interface ApiService {
     suspend fun getStories(
         @Header("Authorization") auth: String,
         @Field("lat") lat: Double = -6.201164960437535,
-        @Field("lon") lon: Double = 106.77238584716075
+        @Field("lon") lon: Double = 106.77238584716075,
+        @Field("age") age: Int = 0,
+        @Field("category")  category : String = ""
     ): Response<DestinationResponse>
 }

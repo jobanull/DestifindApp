@@ -17,9 +17,9 @@ class UserRepository private constructor(
     suspend fun saveSession(user: LoginResult) {
         userPreference.saveSession(user)
     }
-    suspend fun getStories(auth: String, lat: Double, lon: Double): Response<DestinationResponse> {
-//        return apiService.getStories(auth, lat, lon)
-        return apiService.getStories(auth, -6.208560190493255, 106.77456829617012)
+    suspend fun getStories(auth: String, lat: Double, lon: Double, age: Int, category : String): Response<DestinationResponse> {
+        return apiService.getStories(auth, lat, lon, age, category)
+//        return apiService.getStories(auth, -6.208560190493255, 106.77456829617012)
     }
     fun getSession(): Flow<LoginResult> {
         return userPreference.getSession()
