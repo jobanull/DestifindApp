@@ -10,21 +10,32 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.mobiledevelopment.R
 import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.databinding.DestinationItemBinding
 import com.example.mobiledevelopment.ui.detail.DetailActivity
 
 class ListDestinationAdapter : ListAdapter<ListDestinationItem, ListDestinationAdapter.MyViewHolder>(DIFF_CALLBACK) {
-
-
-
     class MyViewHolder(binding: DestinationItemBinding) : RecyclerView.ViewHolder(binding.root){
         private val title = binding.title
         private val image = binding.images
-        private val desc =binding.description
+        private val desc = binding.description
+        private val hour = binding.hour
+        private val distance = binding.distance
+        private val rating = binding.rating
+
         fun bind(review: ListDestinationItem){
             title.text = review.name
             desc.text = review.description
+            hour.apply {
+                hour.text = context.getString(R.string.hour, review.estimatedTime.toString())
+            }
+            distance.apply {
+                distance.text = context.getString(R.string.distance, review.distance.toString())
+            }
+            rating.apply {
+                rating.text = context.getString(R.string.rating, review.rating.toString())
+            }
             Glide.with(itemView.context)
                 .load(review.photoUrl)
                 .into(image)
@@ -58,7 +69,7 @@ class ListDestinationAdapter : ListAdapter<ListDestinationItem, ListDestinationA
     }
 
     companion object {
-        const val KEY = "key_story"
+        const val KEY = "key_dst"
         val DIFF_CALLBACK = object: DiffUtil.ItemCallback<ListDestinationItem>(){
             override fun areItemsTheSame(oldItem: ListDestinationItem, newItem: ListDestinationItem): Boolean {
                 return oldItem == newItem

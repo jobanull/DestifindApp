@@ -21,57 +21,17 @@
     <string name="logout">Logout</string>
 
 
-    <string name="heroes_name">Nama Pahlawan</string>
-    <string name="description">Deskripsi</string>
-    <string name="list">List</string>
-    <string name="grid">grid</string>
-    <string-array name="data_name">
-        <item>Puncak Fantasyland</item>
-        <item>Gunung Pancar</item>
-        <item>Air Terjun Bidadari</item>
-        <item>Curug 7 Cilember</item>
-        <item>Paralayang Bukit Gantole PuncaK</item>
-        <item>Kebun Raya Bogor</item>
-        <item>Taman Safari</item>
-        <item>Highland Park Resort</item>
-        <item>Curug Cibaliung</item>
-    </string-array>
-    <string-array name="data_description">
-        <item>Puncak Fantasyland menawarkan hiburan di dalam ruangan yang sangat menarik perhatian khususnya untuk Si Kecil. Lokasi wisata ini menawarkan wahana permainan dengan konsep negeri dongeng, salah satunya Giant Slider atau perosotan raksasa. Ada juga permainan kekinian seperti Roller Skater yaitu permainan sepatu roda untuk berkeliling area di Puncak Fantasyland.</item>
-        <item>Di destinasi wisata Bogor ini, Moms bisa berpiknik dan juga melakukan aktivitas seperti berkemah, bersepeda, hiking hingga berkuda. Untuk menyegarkan badan setelah lelah berkemah, Moms bisa mampir ke pemandian air panas yang memiliki sumber air panas alami. Mandi berendam sambil menikmati pemandangan pohon pinus di sekeliling yang bisa membantu merilekskan pikiran, dan membuat Si Kecil nyaman. Si Kecil juga bisa menemukan hewan-hewan yang hidup bebas di tempat wisata keluarga di Bogor ini.</item>
-        ,
-        <item>Ingin berenang dengan suasana alam yang asri dan air yang sejuk asli dari mata air? Maka tempat wisata Bogor Air Terjun Bidadari jadi pilihan yang tepat. Dengan ketinggian 75 meter, sumber air terjun ini berasal dari hutan lindung yang ada di sekitar kawasan tersebut. Limpahan air tersebut dijadikan berbagai macam wahana seperti Wave Pool, kolam arus, Lazy Pool yang dibuat untuk anak-anak. Si Kecil bisa menikmati kesegaran bermain air di sini, namun tetap awasi ia saat bermain, ya, Moms.</item>
-        ,
-        <item>Jika Moms merasa bosan menghampiri daerah Puncak Bogor, ajak Si Kecil dan keluarga pergi ke Kebun Raya Cibodas Wisata alam ini memiliki sungai berair jernih untuk tempat bermain anak-anak, serta tanaman hijau luas dengan pemandangan yang membuat takjub. Yang menarik dari kebun raya ini adalah lokasi wisata alamnya yang menjadikan lumut sebagai ikonnya. Di tempat ini terdapat kurang lebih 216 jenis lumut dari seluruh Indonesia, bahkan dunia.</item>
-        ,
-        <item>Tempat wisata Bogor yang satu ini paling cocok untuk pecinta olahraga ekstrem. Kapan lagi bisa merasakan terbang dari ketinggian Puncak Bogor? Selain paragliding, pengunjung juga bisa bersantai menikmati pemandangan kota Bogor dari ketinggian.</item>
-        ,
-        <item>Kebun Raya Bogor bisa dibilang merupakan salah satu tempat wisata Bogor yang paling populer. Berupa taman raya di tengah kota Bogor, Kebun Raya Bogor punya taman hamparan rumput yang luas, trek berlari atau bermain sepeda. Tempat wisata keluarga di Bogor ini juga memiliki pepohonan yang rimbun seolah di hutan, hingga berbagai tempat aktivitas lainnya. Kebun Raya Bogor merupakan kebun botani tertua di Asia Tenggara, dan kini berada di bawah LIPI (Lembaga Ilmu Pengetahuan Indonesia). Tidak heran, jika terdapat laboratorium dan juga museum flora di dalam area ini. Saat berkunjung ke tempat ini, jangan lupa untuk mampir ke Taman Meksiko yang memiliki lebih dari 100 spesies tanaman kaktus. Ada juga area bebatuan yang menciptakan kesan bak padang gurun Meksiko. Lokasinya tidak terlalu jauh dari pintu masuk tempat wisata. Ada banyak hal yang bisa Moms lakukan di Kebun Raya Bogor, baik itu untuk berolahraga maupun bersantai bersama keluarga dan teman-teman.</item>
-        ,
-        <item>Wisata Bogor ini seolah menjadi salah satu ikon yang wajib dikunjungi jika berada di Bogor. Dengan luas mencapai 168 hektare, Taman Safari Bogor adalah salah satu tempat terbaik di Indonesia untuk melihat berbagai macam satwa seperti di habitat aslinya. Moms bisa bersafari menggunakan kendaraan pribadi keliling berbagai area di dalam Taman Safari, dan berinteraksi dengan para satwa secara langsung dari dekat. Jika penasaran dengan pengalaman safari yang berbeda, di Taman Safari Bogor juga ada program Safari Malam yang menarik. Ada pula wahana permainan, seperti Lolly Swing, Crazy Plane, Speedway, Bom Bom Car, Sepeda Layang, Bumper Boat, hingga Safari Waterpark.</item>
-        ,
-        <item>Tempat wisata Bogor ini menyuguhkan glamping, konsep berkemah ala hotel berbintang yang saat ini sedang marak di Indonesia. Tempat wisata ini cocok untuk Moms yang ingin liburan lengkap di satu tempat. Highland Park Resort menawarkan sensasi menginap dengan latar pemandangan Gunung Salak. Tempat wisata ini juga menyediakan tenda-tenda ala Mongolia dengan fasilitas lengkap dan berbagai wahana permainan. Beberapa diantaranya, yakni kolam renang, perosotan, karaoke, foot reflexology, futsal, dan flying fox.</item>
-        ,
-        <item>Curug Cibaliung menyediakan pemandangan air terjun yang jernih dan indah. Selain itu, bebatuan di sekitar lokasi wisata Bogor ini juga dapat memanjakan mata. Pemandangan ciamik yang ada di sini dapat Moms rasakan tanpa menghabiskan banyak uang.</item>
-        ,
-    </string-array>
-    <string-array name="data_photo">
-        <item>https://asset-2.tstatic.net/travel/foto/bank/images/puncak-fantasyland.jpg</item>,
-        <item>https://kelanaku.com/wp-content/uploads/2015/09/gerbang-masuk-gunung-pancar.jpg</item>
-        ,
-        <item>https://www.ladies.id/wp-content/uploads/2018/05/curug-bidadari-bogor.jpg</item>,
-        <item>https://asset.kompas.com/crops/CYdIcKM_FsAbL1gxIQy2yNyJk8k=/0x25:720x505/750x500/data/photo/2022/02/20/6211c3101a6b1.jpg</item>
-        ,
-        <item>https://koran-jakarta.com/images/article/php_i69jf_resized.jpg</item>,
-        <item>https://kebunraya.id/images/about/side-bogor.jpg</item>,
-        <item>https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/rsfit19201280gsm/events/2021/12/08/8a96b5a0-024d-4e5e-9999-508f7349aed7-1638950262082-ee0f4772e8f12f62cbd8285aed4c8314.jpg</item>
-        ,
-        <item>https://highlandindonesia.com/wp-content/uploads/Outing-Highland-Park-Resort-Bogor-2.jpg</item>
-        ,
-        <item>https://asset-2.tstatic.net/travel/foto/bank/images/puncak-fantasyland.jpg</item>
-        ,
-        <item>https://bogorreview.com/wp-content/uploads/2022/05/Curug-Cibaliung.jpg</item>,
-    </string-array>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="email">Email</string>
+    <string name="rating">%1$s Rates</string>
+    <string name="hour">%1$s Hour </string>
+    <string name="distance">%1$s Km</string>
+    <string name="hello_world">Hello World</string>
+    <string name="retry_description">Data not found, please retry</string>
+    <string name="retry">Retry</string>
+    <string name="submit">Submit</string>
+    <string name="select_category">Select Category :</string>
+    <string name="age">How old are you :</string>
+    <string name="category_setting">Category Setting</string>
+    <string name="age_setting">Age Setting</string>
 </resources>

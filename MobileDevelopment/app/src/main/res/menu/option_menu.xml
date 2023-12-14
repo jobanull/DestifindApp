@@ -3,12 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/logout"
-        android:title="Logout"
+        android:id="@+id/ageSetting"
+        android:title="@string/age_setting"
         app:showAsAction="never"/>
-<!--    <item-->
-<!--        android:id="@+id/map"-->
-<!--        android:icon="@drawable/baseline_map_24"-->
-<!--        app:showAsAction="ifRoom"-->
-<!--        android:title="Maps" />-->
+    <item
+        android:id="@+id/categorySetting"
+        android:title="@string/category_setting"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout"
+        app:showAsAction="never"/>
 </menu>

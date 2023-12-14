@@ -1,7 +1,5 @@
 package com.example.mobiledevelopment.ui.main
 
-import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,15 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobiledevelopment.data.UserRepository
-import com.example.mobiledevelopment.data.pref.UserModel
-import com.example.mobiledevelopment.data.response.DestinationResponse
+import com.example.mobiledevelopment.data.pref.LoginResult
 import com.example.mobiledevelopment.data.response.ListDestinationItem
-import com.example.mobiledevelopment.data.response.LoginResult
-import com.example.mobiledevelopment.data.retrofit.ApiConfig
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainViewModel(private val repository: UserRepository) : ViewModel() {
 
@@ -27,9 +19,12 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _currentLatitude = MutableLiveData<Double>()
+    val currentLatitude : LiveData<Double> = _currentLatitude
 
-    var currentLatitude: Double = 0.0
-    var currentLongitude: Double = 0.0
+    private val _currentLongitude = MutableLiveData<Double>()
+    val currentLongitude : LiveData<Double> = _currentLongitude
+
 
     fun getSession(): LiveData<LoginResult> {
         return repository.getSession().asLiveData()
@@ -45,24 +40,18 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
         getSession()
     }
 
-    fun getStories(token: String, latitude: Double, longitude: Double) {
+    fun getStories(token: String, latitude: Double, longitude: Double,  age: Int,category: String,) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-
-                // Make the API call using the updated getStories function in UserRepository
-                val response = repository.getStories("Bearer $token", latitude, longitude)
+                val response = repository.getStories("Bearer $token", latitude, longitude, age,category)
 
                 if (response.isSuccessful) {
-                    // Handle a successful response
-                    _listDst.value = response.body()?.listStory
+                    _listDst.value = response.body()?.listDst
                 } else {
-                    // Handle an unsuccessful response
-                    // You might want to show an error message to the user
                 }
             } catch (e: Exception) {
-                // Handle exceptions
-                // You might want to show an error message to the user
+
             } finally {
                 _isLoading.value = false
             }
@@ -70,7 +59,7 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     }
 
     fun setCurrentLocation(latitude: Double, longitude: Double) {
-        currentLatitude = latitude
-        currentLongitude = longitude
+        _currentLatitude.value = latitude
+        _currentLongitude.value = longitude
     }
 }

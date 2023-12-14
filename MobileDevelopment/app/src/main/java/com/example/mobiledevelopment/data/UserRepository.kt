@@ -1,10 +1,8 @@
 package com.example.mobiledevelopment.data
 
-import androidx.lifecycle.LiveData
-import com.example.mobiledevelopment.data.pref.UserModel
+import com.example.mobiledevelopment.data.pref.LoginResult
 import com.example.mobiledevelopment.data.pref.UserPreference
 import com.example.mobiledevelopment.data.response.DestinationResponse
-import com.example.mobiledevelopment.data.response.LoginResult
 import com.example.mobiledevelopment.data.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -19,9 +17,9 @@ class UserRepository private constructor(
     suspend fun saveSession(user: LoginResult) {
         userPreference.saveSession(user)
     }
-    suspend fun getStories(auth: String, lat: Double, lon: Double): Response<DestinationResponse> {
-        // Assume ApiService has a function named getStories with the required parameters
-        return apiService.getStories(auth, lat, lon)
+    suspend fun getStories(auth: String, lat: Double, lon: Double, age: Int, category : String): Response<DestinationResponse> {
+        return apiService.getStories(auth, lat, lon, age, category)
+//        return apiService.getStories(auth, -6.208560190493255, 106.77456829617012)
     }
     fun getSession(): Flow<LoginResult> {
         return userPreference.getSession()

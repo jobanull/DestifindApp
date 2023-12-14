@@ -2,21 +2,13 @@ package com.example.mobiledevelopment.ui.register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.Intent
 import retrofit2.HttpException
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
-import android.util.Patterns
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
-import com.example.mobiledevelopment.R
 import com.example.mobiledevelopment.data.response.RegisterResponse
 import com.example.mobiledevelopment.data.retrofit.ApiConfig
 import com.example.mobiledevelopment.databinding.ActivityRegisterBinding
@@ -24,6 +16,10 @@ import com.example.mobiledevelopment.ui.custom.CustomButton
 import com.example.mobiledevelopment.ui.custom.CustomEmailText
 import com.example.mobiledevelopment.ui.custom.CustomPasswordText
 import com.example.mobiledevelopment.ui.custom.CustomUsernameText
+import com.example.mobiledevelopment.ui.welcome.WelcomeActivity
+import com.example.mobiledevelopment.util.setupTextWatcher
+import com.example.mobiledevelopment.util.setupView
+import com.example.mobiledevelopment.util.showToast
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
@@ -50,21 +46,9 @@ class RegisterActivity : AppCompatActivity() {
 
         validateEmail()
         validatePassword()
-        setupAction()
+        setupAction(this)
     }
 
-    private fun setupView(){
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.hide(WindowInsets.Type.statusBars())
-        } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
-            )
-        }
-        supportActionBar?.hide()
-    }
 
     private fun playAnimation() {
         ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
@@ -87,35 +71,16 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateEmail(){
-        registerEmailText.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
-
-            override fun afterTextChanged(s: Editable) {
-            }
-        })
+    private fun validateEmail() {
+        registerEmailText.setupTextWatcher {
+            setMyButtonEnable()
+        }
     }
 
-
-
-    private fun validatePassword(){
-        registerPasswordText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                setMyButtonEnable()
-            }
-
-            override fun afterTextChanged(s: Editable) {
-            }
-        })
+    private fun validatePassword() {
+        registerPasswordText.setupTextWatcher {
+            setMyButtonEnable()
+        }
     }
 
     private fun setMyButtonEnable() {
@@ -123,7 +88,7 @@ class RegisterActivity : AppCompatActivity() {
         registerButton.isEnabled = result != null && result.toString().isNotEmpty()
     }
 
-    private fun setupAction() {
+    private fun setupAction(context: Context) {
         binding.btnSignUp.setOnClickListener {
             val name = registerNameTxt.text.toString()
             val email = registerEmailText.text.toString()
@@ -134,13 +99,15 @@ class RegisterActivity : AppCompatActivity() {
                     showLoading(true)
                     val apiService = ApiConfig.getApiService("")
                     val successResponse = apiService.register(name, email, pass)
-                    successResponse.message?.let { it1 -> showToast(it1) }
+                    showToast(context, successResponse.message)
+                    val intent = Intent(this@RegisterActivity, WelcomeActivity::class.java)
+                    startActivity(intent)
                     showLoading(false)
                 }catch (e: HttpException){
                     showLoading(true)
                     val errorBody = e.response()?.errorBody()?.string()
                     val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
-                    showToast(errorResponse.message)
+                    showToast(context, errorResponse.message)
                     showLoading(false)
                 }
             }
@@ -151,7 +118,4 @@ class RegisterActivity : AppCompatActivity() {
         binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 }

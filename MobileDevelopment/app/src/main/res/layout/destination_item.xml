@@ -14,7 +14,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:paddingBottom="30dp"
         android:orientation="vertical">
 
@@ -34,7 +33,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="Hello World"
+            android:text="@string/hello_world"
             android:textColor="@color/black"
             android:textSize="25sp"
             android:transitionName="name" />
@@ -44,9 +43,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="Hello World"
+            android:text="@string/hello_world"
             android:textColor="@color/black"
             android:textSize="15sp"
             android:maxLines="1"
@@ -67,9 +67,10 @@
                 />
 
             <TextView
+                android:id="@+id/hour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1 Jam"
+                android:text="@string/hour"
                 android:textColor="@color/black"
                 android:layout_marginEnd="30dp"
                 />
@@ -83,9 +84,10 @@
                 android:layout_marginEnd="5dp"
                 />
             <TextView
+                android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4.4 Peringkat"
+                android:text="@string/rating"
                 android:textColor="@color/black"
                 />
 
@@ -104,9 +106,10 @@
                 android:layout_marginEnd="5dp"
                 />
             <TextView
+                android:id="@+id/distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4 Km"
+                android:text="@string/distance"
                 android:textColor="@color/black"
                 android:layout_marginEnd="30dp"
                 />
