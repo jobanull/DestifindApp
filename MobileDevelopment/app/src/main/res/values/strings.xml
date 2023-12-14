@@ -32,4 +32,6 @@
     <string name="submit">Submit</string>
     <string name="select_category">Select Category :</string>
     <string name="age">How old are you :</string>
+    <string name="category_setting">Category Setting</string>
+    <string name="age_setting">Age Setting</string>
 </resources>

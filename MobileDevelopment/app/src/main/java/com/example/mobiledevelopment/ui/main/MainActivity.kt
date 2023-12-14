@@ -114,6 +114,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            R.id.ageSetting -> {
+                val intent = Intent(this@MainActivity, AgeActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.categorySetting -> {
+                val intent = Intent(this@MainActivity, CategoryActivity::class.java)
+                startActivity(intent)
+            }
             R.id.logout ->{
                 viewModel.logout()
                 return false
