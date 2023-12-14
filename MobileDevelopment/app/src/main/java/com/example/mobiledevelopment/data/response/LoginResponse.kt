@@ -25,5 +25,7 @@ data class LoginResult(
 
     val category: String = "",
 
+    val age: String = "",
+
     val isLogin: Boolean = false
 )

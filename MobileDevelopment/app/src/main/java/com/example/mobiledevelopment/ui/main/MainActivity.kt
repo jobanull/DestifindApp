@@ -28,6 +28,7 @@ import com.example.mobiledevelopment.data.response.ListDestinationItem
 import com.example.mobiledevelopment.databinding.ActivityMainBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.adapter.ListDestinationAdapter
+import com.example.mobiledevelopment.ui.age.AgeActivity
 import com.example.mobiledevelopment.ui.category.CategoryActivity
 import com.example.mobiledevelopment.ui.maps.MapsActivity
 import com.example.mobiledevelopment.ui.welcome.WelcomeActivity
@@ -60,8 +61,13 @@ class MainActivity : AppCompatActivity() {
                 if (user.category.isNullOrEmpty()) {
                     startActivity(Intent(this, CategoryActivity::class.java))
                     finish()
-                } else {
-                    user.token?.let { viewModel.getStories(it, viewModel.currentLatitude, viewModel.currentLongitude) }
+                } else{
+                    if(user.age.isNullOrEmpty()){
+                        startActivity(Intent(this, AgeActivity::class.java))
+                        finish()
+                    }else {
+                        user.token?.let { viewModel.getStories(it, viewModel.currentLatitude, viewModel.currentLongitude) }
+                    }
                 }
             }
         }

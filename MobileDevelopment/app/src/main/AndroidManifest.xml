@@ -17,6 +17,9 @@
         android:theme="@style/Theme.MobileDevelopment"
         tools:targetApi="31">
         <activity
+            android:name=".ui.age.AgeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.category.CategoryActivity"
             android:exported="false" />
         <!--
