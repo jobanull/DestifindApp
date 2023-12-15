@@ -77,19 +77,21 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            lifecycleScope.launch {
-                try {
-                    showLoading(true)
-                    categoryViewModel.saveSession(LoginResult(email, token,age,selectedCategory))
-                    showLoading(false)
+            showLoading(true)
+            Thread.sleep(2000)
 
+                try {
+                    lifecycleScope.launch {
+                    categoryViewModel.saveSession(LoginResult(email, token,age,selectedCategory))
+                    showLoading(true)
                     val intent = Intent(this@CategoryActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
+                    }
                 }catch (e : Exception){
                     showToast(this@CategoryActivity, "Unexpected error : ${e.message}")
                 }
-            }
+
 
         }
 
