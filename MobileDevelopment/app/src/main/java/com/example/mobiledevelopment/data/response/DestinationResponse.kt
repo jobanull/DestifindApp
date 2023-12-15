@@ -44,4 +44,10 @@ data class ListDestinationItem(
 
     @field:SerializedName("longitude")
     val lon: Double = 0.0,
+
+    @field:SerializedName("category")
+    val category: String = "",
+
+    @field:SerializedName("age")
+    val age: Int = 0,
 ): Parcelable

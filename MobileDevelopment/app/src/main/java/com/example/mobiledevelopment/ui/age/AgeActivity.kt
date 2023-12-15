@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.mobiledevelopment.R
 import com.example.mobiledevelopment.data.pref.LoginResult
+import com.example.mobiledevelopment.data.retrofit.ApiConfig
 import com.example.mobiledevelopment.databinding.ActivityAgeBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.main.MainActivity
@@ -77,9 +78,21 @@ class AgeActivity : AppCompatActivity() {
                     showToast(this@AgeActivity, "Unexpected error : ${e.message}")
                 }
 
+            // PLAN SAVE DATA DI SERVER
 
-
-
+//            try {
+//                lifecycleScope.launch {
+//                    ageViewModel.saveSession(LoginResult(email, token, selectedAge.toInt(),category))
+//                    val apiService = ApiConfig.getApiService(token.toString())
+//                    apiService.age(token.toString(), selectedAge.toInt())
+//
+//                    val intent = Intent(this@AgeActivity, MainActivity::class.java)
+//                    startActivity(intent)
+//                    finish()
+//                }
+//            }catch (e : Exception){
+//                showToast(this@AgeActivity, "Unexpected error : ${e.message}")
+//            }
         }
 
         setupView()
