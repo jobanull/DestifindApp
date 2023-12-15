@@ -11,6 +11,7 @@ import com.example.mobiledevelopment.ui.detail.DetailViewModel
 import com.example.mobiledevelopment.ui.login.LoginViewModel
 import com.example.mobiledevelopment.ui.main.MainViewModel
 import com.example.mobiledevelopment.ui.maps.MapsViewModel
+import com.example.mobiledevelopment.ui.welcome.WelcomeViewModel
 
 
 class ViewModelFactory(private val repository: UserRepository) : ViewModelProvider.NewInstanceFactory() {
@@ -20,6 +21,9 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
         return when {
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(WelcomeViewModel::class.java) -> {
+                WelcomeViewModel(repository) as T
             }
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T

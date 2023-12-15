@@ -6,21 +6,38 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.mobiledevelopment.databinding.ActivityWelcomeBinding
+import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.login.LoginActivity
+import com.example.mobiledevelopment.ui.main.MainActivity
 import com.example.mobiledevelopment.ui.register.RegisterActivity
 import com.example.mobiledevelopment.util.setupView
 
 class WelcomeActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityWelcomeBinding
+
+    private val welcomeViewModel by viewModels<WelcomeViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Thread.sleep(3000)
         installSplashScreen()
+
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        welcomeViewModel.getSession().observe(this){user->
+            if(user.isLogin){
+                showLoading(true)
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+        }
 
         setupView()
         setupAction()
@@ -59,5 +76,9 @@ class WelcomeActivity : AppCompatActivity() {
             playSequentially(title, desc, together)
             start()
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
