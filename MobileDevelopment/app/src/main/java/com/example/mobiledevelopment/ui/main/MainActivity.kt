@@ -3,12 +3,15 @@ package com.example.mobiledevelopment.ui.main
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +20,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -33,9 +37,19 @@ import com.example.mobiledevelopment.ui.maps.MapsActivity
 import com.example.mobiledevelopment.ui.welcome.WelcomeActivity
 import com.example.mobiledevelopment.util.setupView
 import com.example.mobiledevelopment.util.showToast
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.PolylineOptions
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
@@ -46,17 +60,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Thread.sleep(3000)
-        installSplashScreen()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Mendapatkan lokasi terakhir
         getMyLastLocation()
+
+        // Mendapatkan lokasi Ter-update
+        createLocationRequest()
+        createLocationCallback()
 
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
@@ -83,6 +103,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         viewModel.listDst.observe(this){
                 consumer -> setUserList(consumer)
         }
@@ -105,23 +126,64 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-    private fun showRetryLayout() {
-        val inflater = LayoutInflater.from(this)
-        val retryView = inflater.inflate(R.layout.retry_layout, null)
-        val retryDialog = AlertDialog.Builder(this)
-            .setView(retryView)
-            .setCancelable(false)
-            .create()
-
-        val buttonRetry = retryView.findViewById<Button>(R.id.buttonRetry)
-        buttonRetry.setOnClickListener {
-            retryDialog.dismiss()
-            getMyLastLocation()
+//    =============================
+    private val resolutionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartIntentSenderForResult()
+        ) { result ->
+            when (result.resultCode) {
+                RESULT_OK ->
+                    Log.i(this@MainActivity.toString(), "onActivityResult: All location settings are satisfied.")
+                RESULT_CANCELED ->
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Anda harus mengaktifkan GPS untuk menggunakan aplikasi ini!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+            }
         }
-        retryDialog.show()
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest.create().apply {
+            interval = TimeUnit.HOURS.toMillis(1)
+            maxWaitTime = TimeUnit.HOURS.toMillis(1)
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+        val client = LocationServices.getSettingsClient(this)
+        client.checkLocationSettings(builder.build())
+            .addOnSuccessListener {
+                getMyLastLocation()
+            }
+            .addOnFailureListener { exception ->
+                if (exception is ResolvableApiException) {
+                    try {
+                        resolutionLauncher.launch(
+                            IntentSenderRequest.Builder(exception.resolution).build()
+                        )
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                        Toast.makeText(this@MainActivity, sendEx.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
     }
 
+    private fun createLocationCallback() {
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                for(location in locationResult.locations){
+                    try{
+                        getAddressFromLocation(this@MainActivity, location.latitude, location.longitude)
+                        viewModel.setCurrentLocation(location.latitude, location.longitude)
+                    }catch (e: Exception){}
+                }
+            }
+        }
+    }
+
+
+
+    // ACCESS PERMISSION
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -135,7 +197,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
     private fun checkPermission(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             this,
@@ -143,6 +204,7 @@ class MainActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    // GET LAST LOCATION
     private fun getMyLastLocation() {
         if     (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
             checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -164,8 +226,62 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+    // RETRY
+    private fun showRetryLayout() {
+        val inflater = LayoutInflater.from(this)
+        val retryView = inflater.inflate(R.layout.retry_layout, null)
+        val retryDialog = AlertDialog.Builder(this)
+            .setView(retryView)
+            .setCancelable(false)
+            .create()
+
+        val buttonRetry = retryView.findViewById<Button>(R.id.buttonRetry)
+        buttonRetry.setOnClickListener {
+            retryDialog.dismiss()
+            try {
+                fusedLocationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
+            } catch (exception: SecurityException) {
+                Log.e(this@MainActivity.toString(), "Error : " + exception.message)
+            }
+        }
+        retryDialog.show()
+    }
+
+    // GET ADDRESSS
+    private fun getAddressFromLocation(context: Context, latitude: Double, longitude: Double) {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+
+            if (addresses != null) {
+                if (addresses.isNotEmpty()) {
+                    val district = addresses[0].subLocality
+                    val city = addresses[0].adminArea
 
 
+                    if(district.isNullOrEmpty()){
+                        val changeTitle = binding.toolbarMain
+                        changeTitle.title = city.toString()
+                    }else{
+                        val changeTitle = binding.toolbarMain
+                        changeTitle.title = district.toString()
+                    }
+
+                } else {
+                    showToast(context,"Alamat tidak ditemukan")
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast(context,"Gagal mendapatkan alamat")
+        }
+    }
+
+    // INTENT GPS
     private fun isGpsEnabled(): Boolean {
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -177,6 +293,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    // MENU
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu);
         return true;
@@ -198,35 +315,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun getAddressFromLocation(context: Context, latitude: Double, longitude: Double) {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        try {
-            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-
-            if (addresses != null) {
-                if (addresses.isNotEmpty()) {
-                    val kecamatan = addresses[0].subLocality
-                    val kota = addresses[0].adminArea
-
-
-                    if(kecamatan.isNullOrEmpty()){
-                        val changeTitle = binding.toolbarMain
-                        changeTitle.title = kota.toString()
-                    }else{
-                        val changeTitle = binding.toolbarMain
-                        changeTitle.title = kecamatan.toString()
-                    }
-
-                } else {
-                    showToast(context,"Alamat tidak ditemukan")
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            showToast(context,"Gagal mendapatkan alamat")
-        }
     }
 
 

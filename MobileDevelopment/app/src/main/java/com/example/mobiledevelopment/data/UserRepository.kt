@@ -2,6 +2,8 @@ package com.example.mobiledevelopment.data
 
 import com.example.mobiledevelopment.data.pref.LoginResult
 import com.example.mobiledevelopment.data.pref.UserPreference
+import com.example.mobiledevelopment.data.response.AgeResponse
+import com.example.mobiledevelopment.data.response.CategoryResponse
 import com.example.mobiledevelopment.data.response.DestinationResponse
 import com.example.mobiledevelopment.data.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +22,10 @@ class UserRepository private constructor(
     suspend fun getStories(auth: String, lat: Double, lon: Double, age: Int, category : String): Response<DestinationResponse> {
         return apiService.getStories(auth, lat, lon, age, category)
 //        return apiService.getStories(auth, -6.208560190493255, 106.77456829617012)
+    }
+
+    suspend fun getAge(auth: String, age: Int): AgeResponse{
+        return apiService.age(auth, age)
     }
     fun getSession(): Flow<LoginResult> {
         return userPreference.getSession()

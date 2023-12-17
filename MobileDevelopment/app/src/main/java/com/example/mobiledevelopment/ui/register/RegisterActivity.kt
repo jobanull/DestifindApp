@@ -102,7 +102,6 @@ class RegisterActivity : AppCompatActivity() {
                     showToast(context, successResponse.message)
                     val intent = Intent(this@RegisterActivity, WelcomeActivity::class.java)
                     startActivity(intent)
-                    showLoading(false)
                 }catch (e: HttpException){
                     showLoading(true)
                     val errorBody = e.response()?.errorBody()?.string()

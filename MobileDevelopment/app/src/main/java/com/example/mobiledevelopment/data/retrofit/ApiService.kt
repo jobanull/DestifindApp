@@ -1,5 +1,7 @@
 package com.example.mobiledevelopment.data.retrofit
 
+import com.example.mobiledevelopment.data.response.AgeResponse
+import com.example.mobiledevelopment.data.response.CategoryResponse
 import com.example.mobiledevelopment.data.response.DestinationResponse
 import com.example.mobiledevelopment.data.response.LoginResponse
 import com.example.mobiledevelopment.data.response.RegisterResponse
@@ -25,6 +27,20 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String
     ): LoginResponse
+
+    @FormUrlEncoded
+    @POST("category")
+    suspend fun category(
+        @Header("Authorization") auth: String,
+        @Field("category") category: String = "",
+    ): CategoryResponse
+
+    @FormUrlEncoded
+    @POST("age")
+    suspend fun age(
+        @Header("Authorization") auth: String,
+        @Field("age") age: Int = 0,
+    ): AgeResponse
 
     @FormUrlEncoded
     @POST("main")

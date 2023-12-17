@@ -13,10 +13,12 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.mobiledevelopment.R
 import com.example.mobiledevelopment.data.pref.LoginResult
+import com.example.mobiledevelopment.data.retrofit.ApiConfig
 import com.example.mobiledevelopment.databinding.ActivityAgeBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.main.MainActivity
 import com.example.mobiledevelopment.util.setupView
+import com.example.mobiledevelopment.util.showToast
 import kotlinx.coroutines.launch
 
 class AgeActivity : AppCompatActivity() {
@@ -62,12 +64,20 @@ class AgeActivity : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            lifecycleScope.launch {
-                ageViewModel.saveSession(LoginResult(email, token, selectedAge.toInt(),category))
-            }
-            val intent = Intent(this@AgeActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            showLoading(true)
+            Thread.sleep(2000)
+
+                try {
+                    lifecycleScope.launch {
+                    ageViewModel.saveSession(LoginResult(email, token, selectedAge.toInt(),category))
+                    val intent = Intent(this@AgeActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    }
+                }catch (e : Exception){
+                    showToast(this@AgeActivity, "Unexpected error : ${e.message}")
+                }
+
         }
 
         setupView()
@@ -80,6 +90,10 @@ class AgeActivity : AppCompatActivity() {
             repeatCount = ObjectAnimator.INFINITE
             repeatMode = ObjectAnimator.REVERSE
         }.start()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     companion object{

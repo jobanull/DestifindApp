@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.mobiledevelopment.R
 import com.example.mobiledevelopment.data.pref.LoginResult
+import com.example.mobiledevelopment.data.retrofit.ApiConfig
 import com.example.mobiledevelopment.databinding.ActivityCategoryBinding
 import com.example.mobiledevelopment.ui.ViewModelFactory
 import com.example.mobiledevelopment.ui.main.MainActivity
@@ -77,20 +78,19 @@ class CategoryActivity : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            lifecycleScope.launch {
-                try {
-                    showLoading(true)
-                    categoryViewModel.saveSession(LoginResult(email, token,age,selectedCategory))
-                    showLoading(false)
+            showLoading(true)
+            Thread.sleep(2000)
 
+                try {
+                    lifecycleScope.launch {
+                    categoryViewModel.saveSession(LoginResult(email, token,age,selectedCategory))
                     val intent = Intent(this@CategoryActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
+                    }
                 }catch (e : Exception){
                     showToast(this@CategoryActivity, "Unexpected error : ${e.message}")
                 }
-            }
-
         }
 
 
