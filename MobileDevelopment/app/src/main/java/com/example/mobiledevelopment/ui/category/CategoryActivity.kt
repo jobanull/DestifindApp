@@ -91,21 +91,6 @@ class CategoryActivity : AppCompatActivity() {
                 }catch (e : Exception){
                     showToast(this@CategoryActivity, "Unexpected error : ${e.message}")
                 }
-
-            // PLAN SAVE DATA DI SERVER
-//            try {
-//                lifecycleScope.launch {
-//                    categoryViewModel.saveSession(LoginResult(email, token,age,selectedCategory))
-//                    val apiService = ApiConfig.getApiService(token.toString())
-//                    apiService.category(token.toString(), selectedCategory)
-//
-//                    val intent = Intent(this@CategoryActivity, MainActivity::class.java)
-//                    startActivity(intent)
-//                    finish()
-//                }
-//            }catch (e : Exception){
-//                showToast(this@CategoryActivity, "Unexpected error : ${e.message}")
-//            }
         }
 
 

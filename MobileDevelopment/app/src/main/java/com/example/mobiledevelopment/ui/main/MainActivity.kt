@@ -103,40 +103,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // PLAN SAVE DATA DI SERVER
-
-//        viewModel.getSession().observe(this) { user ->
-//            if (!user.isLogin) {
-//                startActivity(Intent(this, WelcomeActivity::class.java))
-//                finish()
-//            }else {
-//                viewModel.listDst.observe(this){dataCategory ->
-//                    dataCategory.forEach { userCategory->
-//                        if(userCategory.category.isNullOrEmpty()){
-//                            startActivity(Intent(this, CategoryActivity::class.java))
-//                            finish()
-//                        }else{
-//                            viewModel.listDst.observe(this){dataAge->
-//                                dataAge.forEach { userAge->
-//                                    if(userAge.age == 0 || userAge.age == 1){
-//                                        startActivity(Intent(this, AgeActivity::class.java))
-//                                        finish()
-//                                    }else {
-//                                        user.token?.let { token ->
-//                                            viewModel.currentLatitude.observe(this) { lat ->
-//                                                viewModel.currentLongitude.observe(this) { long ->
-//                                                        viewModel.getStories(token, lat, long, user.age, user.category)
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
 
         viewModel.listDst.observe(this){
                 consumer -> setUserList(consumer)

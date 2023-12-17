@@ -78,21 +78,6 @@ class AgeActivity : AppCompatActivity() {
                     showToast(this@AgeActivity, "Unexpected error : ${e.message}")
                 }
 
-            // PLAN SAVE DATA DI SERVER
-
-//            try {
-//                lifecycleScope.launch {
-//                    ageViewModel.saveSession(LoginResult(email, token, selectedAge.toInt(),category))
-//                    val apiService = ApiConfig.getApiService(token.toString())
-//                    apiService.age(token.toString(), selectedAge.toInt())
-//
-//                    val intent = Intent(this@AgeActivity, MainActivity::class.java)
-//                    startActivity(intent)
-//                    finish()
-//                }
-//            }catch (e : Exception){
-//                showToast(this@AgeActivity, "Unexpected error : ${e.message}")
-//            }
         }
 
         setupView()
