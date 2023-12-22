@@ -1,0 +1,7 @@
+runtime: nodejs20
+entrypoint: node server.js
+
+env_variables:
+  uri: "mongodb+srv://zaki:VSy7e4WUHUiLUCyA@cluster0.glyp0q0.mongodb.net/?retryWrites=true&w=majority"
+  apiKey: "AIzaSyDMj67KJS4jcsxw9Fk9wDLMbY7rgw6lLoo"
+  pwtoken: "Destifindpw"
