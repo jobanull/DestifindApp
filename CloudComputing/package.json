@@ -1,0 +1,38 @@
+{
+  "name": "api-regis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "data.js",
+  "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "process.env.NODE_ENV node server.js",
+      "start-dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+      "@google-cloud/memcache": "^3.0.1",
+      "@hapi/bell": "^13.0.1",
+      "@hapi/boom": "^10.0.1",
+      "@hapi/catbox": "^12.1.1",
+      "@hapi/hapi": "^21.3.2",
+      "@hapi/joi": "^17.1.1",
+      "axios": "^1.6.2",
+      "bcrypt": "^5.1.1",
+      "catbox": "^2.2.1",
+      "catbox-mongodb": "^4.2.1",
+      "cross-fetch": "^4.0.0",
+      "esm": "^3.2.25",
+      "hapi-auth-jwt2": "^10.4.0",
+      "jsonwebtoken": "^9.0.2",
+      "memcached": "^2.2.2",
+      "mongodb": "^6.3.0",
+      "nanoid": "^3.3.7",
+      "redis": "^4.6.11"
+  },
+  "devDependencies": {
+      "eslint": "^8.53.0",
+      "eslint-config-google": "^0.14.0",
+      "nodemon": "^3.0.1"
+  }
+}
