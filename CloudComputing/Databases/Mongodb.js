@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 const users = require('../API-Regis/data');
 const {MongoClient, ServerApiVersion} = require('mongodb');
-const uri = 'mongodb+srv://zaki:VSy7e4WUHUiLUCyA@cluster0.glyp0q0.mongodb.net/?retryWrites=true&w=majority';
+const uri = process.env.uri;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 async function insertData() {
   const client = new MongoClient(uri, {
