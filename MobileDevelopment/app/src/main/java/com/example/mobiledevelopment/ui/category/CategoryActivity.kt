@@ -37,11 +37,9 @@ class CategoryActivity : AppCompatActivity() {
         val spinner: Spinner = binding.spinnerCategories
         val categories = resources.getStringArray(R.array.category_array)
         val categoryLabels = mapOf(
-            "point_of_interest" to "Point of Interest",
-            "amusement_park" to "Amusement Park",
-            "tourist_attraction" to "Tourist Attraction",
-            "restaurant" to "Restaurant",
-            "art_gallery" to "Art Gallery"
+            "bahari" to "Nautical",
+            "budaya" to "Culture",
+            "taman_hiburan" to "Amusment Park",
         )
         val button: Button = binding.buttonCategory
 

@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <string-array name="category_array">-->
-<!--        <item>Bahari</item>-->
-<!--        <item>Budaya</item>-->
-<!--        <item>Taman Hiburan</item>-->
-<!--        <item>Cagar Alam</item>-->
-<!--        <item>Pusat Perbelanjaan</item>-->
-<!--        <item>Tempat Ibadah</item>-->
-<!--    </string-array>-->
     <string-array name="category_array">
-        <item>point_of_interest</item>
-        <item>amusement_park</item>
-        <item>tourist_attraction</item>
-        <item>restaurant</item>
-        <item>art_gallery</item>
+        <item>bahari</item>
+        <item>budaya</item>
+        <item>taman_hiburan</item>
     </string-array>
+
 
     <string-array name="age_array">
         <item>18</item>

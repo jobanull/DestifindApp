@@ -47,11 +47,13 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
                 val response = repository.getStories("Bearer $token", latitude, longitude, age,category)
 
                 if (response.isSuccessful) {
-                    _listDst.value = response.body()?.listDst
+                    val filteredListDst = response.body()?.listDst
+                    _listDst.value = filteredListDst.orEmpty()
                 } else {
+                    Log.d(TAG, response.errorBody().toString())
                 }
             } catch (e: Exception) {
-
+                Log.d(TAG, e.toString())
             } finally {
                 _isLoading.value = false
             }
@@ -61,5 +63,9 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     fun setCurrentLocation(latitude: Double, longitude: Double) {
         _currentLatitude.value = latitude
         _currentLongitude.value = longitude
+    }
+
+    companion object{
+        const val TAG = "MainViewModel"
     }
 }

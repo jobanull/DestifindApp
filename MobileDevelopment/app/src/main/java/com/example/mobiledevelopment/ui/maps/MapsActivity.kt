@@ -134,7 +134,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun addManyMarker() {
         mapsViewModel.listDst.observe(this) {data ->
             data.forEach { data ->
-
                 val latLng = LatLng(data.lat, data.lon)
                 mMap.addMarker(
                     MarkerOptions()
